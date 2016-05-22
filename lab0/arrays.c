@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
   // to 11 instead? How about 100? 1000? Make sure to set
   // the second argument back to 10 when you are done
   // testing.
-  // Answer:
+  // Answer: Segmentation fault (core dumped)
   fillArray(array, 10);
 
   int value;
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
   // TODO(2): We can actually use the address of the value
   // declared here as if it were an array of a single
   // element; why is this possible?
-  // Answer:
+  // Answer: They are both pointers to memory
   fillArray(&value, 1);
   // fillArray should set value to 0 * 3 + 2 = 2.
   assert(value == 2);
@@ -116,7 +116,7 @@ int main(int argc, char* argv[]) {
   // it. valgrind is a tool for analyzing how programs
   // use memory, which is often invaluable for C and
   // C++ programming.
-  // Answer:
+  // Answer: definitely lost 20 bytes
   free(heap_array);
 
   // TODO(4): Now it's your turn to write some code.
@@ -131,5 +131,14 @@ int main(int argc, char* argv[]) {
   // you would expect. (Hint, you'll need to use the
   // -> operator to access fields of a FourInts*
   // variable instead of the . operator).
+
+  FourInts *fourInts = (FourInts *) malloc (sizeof(FourInts));
+  fillArray((int*) fourInts, 4);
+  assert(fourInts->a == 2);
+  assert(fourInts->b == 5);
+  assert(fourInts->c == 8);
+  assert(fourInts->d == 11);
+
+  free(fourInts);
   return 0;
 }
