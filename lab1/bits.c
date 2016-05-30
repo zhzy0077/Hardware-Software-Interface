@@ -120,7 +120,7 @@ NOTES:
  *   Rating: 1
  */
 int bitAnd(int x, int y) {
-  return 2;
+  return ~(~x | ~y);
 }
 /* 
  * bitXor - x^y using only ~ and & 
@@ -130,7 +130,9 @@ int bitAnd(int x, int y) {
  *   Rating: 1
  */
 int bitXor(int x, int y) {
-  return 2;
+  int a = x & ~y;
+  int b = ~x & y;
+  return ~(~a & ~b);
 }
 /* 
  * thirdBits - return word with every third bit (starting from the LSB) set to 1
@@ -140,7 +142,11 @@ int bitXor(int x, int y) {
  *   Rating: 1
  */
 int thirdBits(void) {
-  return 2;
+  int a = 0x49;
+  int b = 0x92;
+  int c = 0x24;
+  int d = 0x49;
+  return a | (b << 8) | (c << 16) | (d << 24);
 }
 // Rating: 2
 /* 
@@ -153,7 +159,10 @@ int thirdBits(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
-  return 2;
+  int m = n + (~1 + 1); // n - 1
+  int a = !!(x >> m); // should be zero for positive;
+  int b = !!((~x) >> m); // zero for negetive;
+  return !!(!a | !b);
 }
 /* 
  * sign - return 1 if positive, 0 if zero, and -1 if negative
@@ -164,7 +173,7 @@ int fitsBits(int x, int n) {
  *  Rating: 2
  */
 int sign(int x) {
-  return 2;
+  return (x >> 31) | (!!((~(!(x >> 31)) + 1) & x));
 }
 /* 
  * getByte - Extract byte n from word x
@@ -175,7 +184,8 @@ int sign(int x) {
  *   Rating: 2
  */
 int getByte(int x, int n) {
-  return 2;
+  int m = n << 3; //8 * n;
+  return (x >> m) & 0xFF;
 }
 // Rating: 3
 /* 
@@ -187,7 +197,9 @@ int getByte(int x, int n) {
  *   Rating: 3 
  */
 int logicalShift(int x, int n) {
-  return 2;
+  int minusOne = (~1 + 1);
+  int m = (~n + 1) + 31; // 31 - n
+  return (~(minusOne << m << 1)) & (x >> n);
 }
 /* 
  * addOK - Determine if can compute x+y without overflow
@@ -198,7 +210,7 @@ int logicalShift(int x, int n) {
  *   Rating: 3
  */
 int addOK(int x, int y) {
-  return 2;
+  return !!(((x ^ y) >> 31) | !(((x + y) >> 31) ^ ((x & y) >> 31)));
 }
 // Rating: 4
 /* 
@@ -209,7 +221,12 @@ int addOK(int x, int y) {
  *   Rating: 4 
  */
 int bang(int x) {
-  return 2;
+  x = (x >> 16) | x;
+  x = (x >> 8 ) | x;
+  x = (x >> 4 ) | x;
+  x = (x >> 2 ) | x;
+  x = (x >> 1 ) | x;
+  return ~x & 1;
 }
 // Extra Credit: Rating: 3
 /* 
@@ -220,7 +237,8 @@ int bang(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+  int minusOne = (~1 + 1);
+  return ((~(!!x) + 1) & y) | (((!!x) + minusOne) & z);
 }
 // Extra Credit: Rating: 4
 /*
@@ -232,5 +250,7 @@ int conditional(int x, int y, int z) {
  *   Rating: 4
  */
 int isPower2(int x) {
-  return 2;
+  int y = x & (~x + 1);
+  int z = (~x) | y;
+  return !(~z) & !(x >> 31) & !!x;
 }

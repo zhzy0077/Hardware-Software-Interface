@@ -85,8 +85,11 @@ int intSize() {
   int * intPtr1;
   int * intPtr2;
   // TODO: Write code to compute size of an integer.
-
-  return 2;
+  char * charPtr1 = (char*) intArray;
+  intPtr1 = intArray;
+  intPtr2 = intPtr1 + 1;
+  int size = ((char*) intPtr2 - charPtr1);
+  return size;
 }
 
 /*
@@ -97,8 +100,10 @@ int doubleSize() {
   double * doubPtr1;
   double * doubPtr2;
   // TODO: Write code to compute size of a double.
-
-  return 2;
+  doubPtr1 = doubArray;
+  doubPtr2 = doubPtr1 + 1;
+  int size = ((char*)doubPtr2 - (char*)doubPtr1);
+  return size;
 }
 
 /*
@@ -109,8 +114,10 @@ int pointerSize() {
   double ** ptrPtr1;
   double ** ptrPtr2;
   // TODO: Write code to compute size of a pointer.
-
-  return 2;
+  ptrPtr1 = ptrArray;
+  ptrPtr2 = ptrPtr1 + 1;
+  int size = ((char*)ptrPtr2 - (char*) ptrPtr1);
+  return size;
 }
 
 /*
@@ -124,6 +131,7 @@ int changeValue() {
   // TODO: Write code to change value of intArray[5] to 351 using only
   //       intPtr1 and the + operator.
 
+  *(intPtr1 + 5) = 351;
   return intArray[5];
 }
 
@@ -136,7 +144,10 @@ int changeValue() {
  */
 int withinSameBlock(int * ptr1, int * ptr2) {
   // TODO
-  return 2;
+  int mask = (1 << 31) >> 25;
+  int a = (int)ptr1;
+  int b = (int)ptr2;
+  return !(((int)a & mask) ^ ((int)b & mask));
 }
 
 /*
@@ -145,7 +156,10 @@ int withinSameBlock(int * ptr1, int * ptr2) {
  */
 int withinArray(int * intArray, int size, int * ptr) {
   // TODO
-  return 2;
+  int cnt = (char*)ptr - (char*)intArray;
+  int x = !(cnt >> 31) & !(((size - 1) * 4 - cnt) >> 31);
+  int y = !(cnt & 0x3);
+  return x & y;
 }
 /*
  * Return x with the n bits that begin at position p inverted (i.e.,
@@ -154,5 +168,7 @@ int withinArray(int * intArray, int size, int * ptr) {
  */
 int invert(int x, int p, int n) {
   // TODO
-  return 2;
+  int a = (1 << n) - 1;
+  int b = a << p;
+  return x ^ b;
 }
